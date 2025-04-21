@@ -1,4 +1,4 @@
-
+"use server";
 
 import OpenAI from "openai";
 import { CoachingOptions } from "./options";
