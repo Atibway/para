@@ -33,40 +33,40 @@ const {roomId} = useParams();
   const updateSummary = useMutation(api.DiscussionRoom.updateSummary)
 
   const GenerateFeedbackNotes = async () => {
-    try {
-      setLoading(true);
-  
-      // Call AI to generate feedback and notes
-      const result = await AIModelToGenerateFeedbackAndNotes({
-        coachingOption,
-        conversation,
-      });
-  
-      if (!result?.content) {
-        toast.error("No content returned from AI model.")
-        throw new Error("No content returned from AI model.");
-      }else {
-        toast.success("content returned from AI model.")
-      }
-  
-      console.log(!result.content);
-      
+    setLoading(true);
+    // Call AI to generate feedback and notes
+    const result = await AIModelToGenerateFeedbackAndNotes({
+      coachingOption,
+      conversation,
+    });
+    console.log(!result.content);
 
-      // Update the summary in the backend
-    const summary =  await updateSummary({
-        id: roomId as Id<"DiscussionRoom">,
-        summary: result.content,
-      });
-  
-      console.log(summary);
-      toast.success("Feedback/Notes Saved!")
-
-    } catch (error) {
-      console.error("Failed to generate feedback notes:", error);
-      toast.error("Failed to generate feedback notes")
-    } finally {
+    if (!result?.content) {
+      toast.error("No content returned from AI model.")
       setLoading(false);
+      throw new Error("No content returned from AI model.");
+    }else {
+      toast.success("content returned from AI model.")
     }
+
+    // Update the summary in the backend
+  const summary =  await updateSummary({
+      id: roomId as Id<"DiscussionRoom">,
+      summary: result.content,
+    });
+
+    console.log(summary);
+    toast.success("Feedback/Notes Saved!")
+    setLoading(false);
+    // try {
+  
+
+    // } catch (error) {
+    //   console.error("Failed to generate feedback notes:", error);
+    //   toast.error("Failed to generate feedback notes")
+    // } finally {
+    //   setLoading(false);
+    // }
   };
   
 
