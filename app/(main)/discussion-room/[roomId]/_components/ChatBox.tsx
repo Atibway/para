@@ -36,6 +36,8 @@ const [loading, setLoading]= useState(false)
     try {
       setLoading(true);
       toast.success("starting generating...")
+      console.log(conversation);
+      
       // Call AI to generate feedback and notes
       const result = await AIModelToGenerateFeedbackAndNotes({
         coachingOption,
@@ -58,13 +60,13 @@ const [loading, setLoading]= useState(false)
   
     //   console.log(summary);
     //   toast.success("Feedback/Notes Saved!")
+    setLoading(false);
 
     } catch (error) {
       console.error("Failed to generate feedback notes:", error);
-      toast.error("Failed to generate feedback notes")
-    } finally {
+      toast.error("Failed to generate feedback notess")
       setLoading(false);
-    }
+    } 
   };
   
 

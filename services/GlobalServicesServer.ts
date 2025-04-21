@@ -15,7 +15,7 @@ export async function AIModel(
         {
         topic, 
         coachingOption,
-         msg 
+        msg 
     }:{
         topic:string
         coachingOption:string
