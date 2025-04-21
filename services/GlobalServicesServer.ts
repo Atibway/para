@@ -3,9 +3,14 @@
 import OpenAI from "openai";
 import { CoachingOptions } from "./options";
 
+// const openai = new OpenAI({
+//   baseURL: "https://openrouter.ai/api/v1",
+//   apiKey: process.env.AI_OPENROUTER,
+// });
+
 const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.AI_OPENROUTER,
+  baseURL: 'https://api.deepseek.com',
+  apiKey: process.env.DEEPSEEK_KEY
 });
 
 export async function AIModel(
@@ -25,7 +30,7 @@ export async function AIModel(
   const prompt = option?.prompt.replace("{user_topic}", topic);
 
   const completion = await openai.chat.completions.create({
-    model: "thudm/glm-4-32b:free",
+    model: "deepseek-chat",
     messages: [
       { role: "assistant", content: prompt },
       { role: "user", content: msg },
@@ -67,7 +72,7 @@ export async function AIModelToGenerateFeedbackAndNotes(
 
     // Prepare the API payload.
     const payload = {
-      model: "thudm/glm-4-32b:free",
+      model: "deepseek-chat",
       messages: [
         { role: "assistant", content: prompt },
         ...conversation, // Make sure conversation is an array of valid message objects!
