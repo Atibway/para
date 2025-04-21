@@ -37,30 +37,57 @@ export async function AIModel(
 //   console.log(completion.choices[0].message)
   return completion.choices[0].message
 }
+
 export async function AIModelToGenerateFeedbackAndNotes(
-        {
-        coachingOption,
-         conversation,
-    }:{
-        coachingOption: string | undefined
-        conversation: any
-    }
+  {
+    coachingOption,
+    conversation,
+  }: {
+    coachingOption: string | undefined;
+    conversation: any;
+  }
 ) {
+  try {
+    // Find the coaching option. Throw an error if not found.
+    const option = CoachingOptions.find(item => item.name === coachingOption);
+    if (!option) {
+      throw new Error(`Coaching option "${coachingOption}" not found.`);
+    }
 
-        const option = CoachingOptions.find(item => item.name === coachingOption)
-    const prompt = option?.summeryPrompt
+    const prompt = option.summeryPrompt;
+    if (!prompt) {
+      throw new Error("No summary prompt defined for the specified coaching option.");
+    }
 
-  const completion = await openai.chat.completions.create({
-    model: "thudm/glm-4-32b:free",
-    messages: [
-                { role: "assistant", content: prompt },
-                ...conversation,
-              ],
-  })
+    // Attempt to call the OpenAI API.
+    const completion = await openai.chat.completions.create({
+      model: "thudm/glm-4-32b:free",
+      messages: [
+        { role: "assistant", content: prompt },
+        ...conversation,
+      ],
+    });
 
-  console.log(completion.choices[0].message)
-  return completion.choices[0].message
+    // Check if choices exist.
+    if (!completion.choices || completion.choices.length === 0) {
+      throw new Error("No choices returned from the OpenAI API.");
+    }
+
+    const message = completion.choices[0].message;
+    if (!message) {
+      throw new Error("No message returned in the API response.");
+    }
+
+    console.log(message);
+    return message;
+  } catch (error: any) {
+    // Log the error for debugging purposes.
+    console.error("Error in AIModelToGenerateFeedbackAndNotes:", error);
+    // Optionally, you can customize the error that gets thrown or return a default value.
+    throw error;
+  }
 }
+
 
 
 
