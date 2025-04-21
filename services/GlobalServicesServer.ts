@@ -1,5 +1,6 @@
 
 
+"use server"
 
 import OpenAI from "openai"
 
@@ -8,7 +9,6 @@ import { CoachingOptions } from "./options"
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.AI_OPENROUTER,
-  
 })
 
 export async function AIModel(
