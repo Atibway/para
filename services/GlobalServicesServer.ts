@@ -49,7 +49,10 @@ export async function AIModelToGenerateFeedbackAndNotes(
     conversation,
   }: {
     coachingOption: string | undefined;
-    conversation: any;
+   conversation: {
+    role: string;
+    content: string;
+}[]
   }
 ) {
   try {
@@ -70,27 +73,37 @@ export async function AIModelToGenerateFeedbackAndNotes(
     console.log("Feedback/Notes function -- prompt:", prompt);
     console.log("Feedback/Notes function -- conversation:", conversation);
 
-    // Prepare the API payload.
-    const payload = {
+    const completion = await openai.chat.completions.create({
       model: "deepseek-chat",
       messages: [
         { role: "assistant", content: prompt },
-        ...conversation, // Make sure conversation is an array of valid message objects!
+        ...conversation.map((message) => ({
+          role: message.role as "system" | "user" | "assistant", // Ensure role matches expected types
+          content: message.content, // Keep content as is
+        })),
       ],
-    };
+    });
 
-    // Make the API call.
-    const completion = await openai.chat.completions.create(payload);
+    // // Prepare the API payload.
+    // const payload = {
+    //   model: "deepseek-chat",
+    //   messages: [
+    //     { role: "assistant", content: prompt },
+    //     ...conversation, // Make sure conversation is an array of valid message objects!
+    //   ],
+    // };
+
+  
 
     // Log the full API response so you can inspect it.
-    console.log("Feedback/Notes API full response:", completion);
+    console.log("Feedback/Notes API full response:", completion.choices[0].message);
 
     // Check if the API returned choices.
-    if (!completion.choices || completion.choices.length === 0) {
-      throw new Error(
-        "No choices returned from the OpenAI API. Full response: " + JSON.stringify(completion)
-      );
-    }
+    // if (!completion.choices || completion.choices.length === 0) {
+    //   throw new Error(
+    //     "No choices returned from the OpenAI API. Full response: " + JSON.stringify(completion)
+    //   );
+    // }
 
     const message = completion.choices[0].message;
     if (!message) {
