@@ -52,14 +52,14 @@ const [loading, setLoading]= useState(false)
         toast.success("content returned from AI model.")
       }
   
-    //   // Update the summary in the backend
-    // const summary =  await updateSummary({
-    //     id: roomId as Id<"DiscussionRoom">,
-    //     summary: result.content,
-    //   });
+      // Update the summary in the backend
+    const summary =  await updateSummary({
+        id: roomId as Id<"DiscussionRoom">,
+        summary: result.content,
+      });
   
-    //   console.log(summary);
-    //   toast.success("Feedback/Notes Saved!")
+      console.log(summary);
+      toast.success("Feedback/Notes Saved!")
     setLoading(false);
 
     } catch (error) {
