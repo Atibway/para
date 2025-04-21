@@ -43,9 +43,15 @@ const {roomId} = useParams();
       });
   
       if (!result?.content) {
+        toast.error("No content returned from AI model.")
         throw new Error("No content returned from AI model.");
+      }else {
+        toast.success("content returned from AI model.")
       }
   
+      console.log(!result.content);
+      
+
       // Update the summary in the backend
     const summary =  await updateSummary({
         id: roomId as Id<"DiscussionRoom">,
@@ -87,6 +93,14 @@ const {roomId} = useParams();
         ))}
   
       </div>
+      
+      {summaryPage && (
+  <Button onClick={GenerateFeedbackNotes} className='mt-7 w-full'>
+  {loading && <LoaderCircle className='animate-spin' />}
+  Re-Generate Feedback/Notes
+</Button>
+      )}
+
     {!summaryPage && (
       !enableFeedbackNotes ? (
         <h2 className='mt-4 text-gray-400'>At the end of your conversation we will automatically generate feedback notes from your conversation</h2>
